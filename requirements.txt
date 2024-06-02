@@ -1,0 +1,48 @@
+# utilities
+tqdm
+PyYAML
+fastparquet
+mojimoji
+openpyxl
+
+# data analysis / machine learning
+numpy
+scipy
+numba
+pandas
+scikit-learn
+xgboost
+lightgbm
+cerberus
+lifelines
+HLL
+accelerate
+
+# visualization
+matplotlib
+seaborn
+plotly
+kaleido
+tensorboard
+
+# google
+pandas-gbq
+google-cloud-bigquery[bgstorage,pandas]
+google-api-python-client
+oauth2client
+
+# aws
+boto3
+
+# jupyter
+jupyterlab
+ipywidgets
+widgetsnbextension
+
+# pytorch requirements
+--find-links https://download.pytorch.org/whl/cu117/torch_stable.html
+torch
+torchvision
+torchaudio
+torchdata
+transformers
