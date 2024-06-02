@@ -1,17 +1,27 @@
-FROM python:3.8-slim
+FROM ubuntu:22.04
 
-# 必要なパッケージをインストール
-RUN apt-get update && \
-	apt-get install -y libgl1-mesa-glx && \
-	apt-get install -y libglib2.0-0 && \
-	apt-get clean && \
-	rm -rf /var/lib/apt/lists/* && \
-	pip install --upgrade pip && \
-	pip install torch torchvision scipy numpy pandas matplotlib seaborn jupyterlab scikit-learn thop albumentations opencv-python imgaug torchtext nltk gensim portalocker && \
-	rm -rf ~/.cache/pip
+RUN apt-get update && apt-get upgrade -y \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata \
+	&& apt-get install -y \
+		python3 \
+		python3-pip \
+		wget \
+		curl \
+		vim \
+		git \
+		fonts-noto-cjk \
+		language-pack-ja
 
-WORKDIR /
-RUN mkdir /work
 
-# execute jupyterlab as a default command
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--allow-root", "--LabApp.token=''"]
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && apt-get install google-cloud-sdk -y
+
+COPY requirements.txt /tmp/requirements.txt
+
+RUN pip install -U pip \
+	&& pip install --no-cache-dir -r /tmp/requirements.txt \
+	&& rm -r /tmp/requirements.txt
+
+WORKDIR /work
+EXPOSE 1111
+
+CMD ["jupyter-lab", "--ip=0.0.0.0", "--LabApp.token=''", "--no-browser", "--allow-root", "--notebook-dir='/work'"]
